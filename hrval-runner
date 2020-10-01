@@ -10,14 +10,14 @@ function get_targets {
 }
 
 function patched_kustomization {
-  local env_path flux_patch kust_patch
+  local env_path flux_patch
   env_path=$1
   flux_patch="$env_path/flux-patch.yaml"
+  kustomize create
+  kustomize edit add resource "$env_path"
   if [ -s "$flux_patch" ]; then
-    kust_patch="patchesStrategicMerge:\n- $flux_patch"
+    kustomize edit add patch "$flux_patch"
   fi
-  export env_path kust_patch
-  envsubst < /kustomization.template.yaml > kustomization.yaml
 }
 
 function build {
