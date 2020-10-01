@@ -17,7 +17,7 @@ function patched_kustomization {
     kust_patch="patchesStrategicMerge:\n- $flux_patch"
   fi
   export env_path kust_patch
-  envsubst < kustomization.template.yaml > kustomization.yaml
+  envsubst < /kustomization.template.yaml > kustomization.yaml
 }
 
 function build {
