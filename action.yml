@@ -1,0 +1,25 @@
+name: hrval
+description: Run hrval on files that have changed between kustomize built head and base
+inputs:
+  base_ref:
+    description: Ref for PR base
+    required: true
+    default: ${{ github.base_ref }}
+  head_ref:
+    description: Ref for PR head
+    required: true
+    default: ${{ github.head_ref }}
+  pr_num:
+    description: PR number / ID
+    required: true
+    default: ${{ github.event.number }}
+  token:
+    description: Token for GitHub authentication
+    required: true
+    default: ${{ github.token }}
+outputs:
+  numFilesTested:
+    description: The number of HelmRelease files tested
+runs:
+  using: docker
+  image: Dockerfile

@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+set -eux
+
+TMP_DIR="$(mktemp -d)"
+
+function get_targets {
+  find . -maxdepth 3 -name kustomization.yaml -exec dirname {} \;
+  find . -mindepth 4 -maxdepth 4 -name kustomization.yaml -exec dirname {} \; | sort | uniq | grep variant
+}
+
+function patched_kustomization {
+  local env_path flux_patch kust_patch
+  env_path=$1
+  flux_patch="$env_path/flux-patch.yaml"
+  if [ -s "$flux_patch" ]; then
+    kust_patch="patchesStrategicMerge:\n- $flux_patch"
+  fi
+  export env_path kust_patch
+  envsubst < kustomization.template.yaml > kustomization.yaml
+}
+
+function build {
+  local ref="$1"
+  printf "\n\nChecking out ref: %s\n" "$ref"
+  git checkout "$ref" --quiet
+  for env_path in $(get_targets); do
+    local build_dir
+    if ! [ -d "$env_path" ]; then continue; fi
+    build_dir="$TMP_DIR/$ref/${env_path#*kustomize/}"
+    printf "\n\nCreating build directory: %s\n" "$build_dir"
+    mkdir -p "$build_dir"
+    patched_kustomization "$env_path"
+    echo "Running kustomize"
+    kustomize build . -o "$build_dir"
+    rm kustomization.yaml
+  done
+}
+
+function changed_yamls {
+  git diff \
+    --diff-filter AM \
+    --name-only \
+    --no-index \
+    "$TMP_DIR/$INPUT_BASE_REF" "$TMP_DIR/$INPUT_HEAD_REF" \
+  | grep -E '\.(yaml|yml)$'
+}
+
+function is_helm_release {
+  local kind yaml
+  yaml=$1
+  kind=$(yq r "$yaml" kind)
+  if [[ $kind == "HelmRelease" ]]; then
+      echo true
+  else
+    echo false
+  fi
+}
+
+function main {
+  local files_tested
+  files_tested=0
+
+  build "$INPUT_HEAD_REF"
+  build "$INPUT_BASE_REF"
+
+  set +e
+  for yaml in $(changed_yamls); do
+    if [[ $(is_helm_release "$yaml") == "true" ]]; then
+      /usr/local/bin/hrval.sh "$yaml" "$INPUT_IGNORE_VALUES" "$INPUT_KUBE_VER" "$INPUT_HELM_VER"
+      files_tested=$(( files_tested+1 ))
+    fi
+  done
+  set -e
+
+  echo "::set-output name=numFilesTested::${files_tested}"
+}
+
+main
