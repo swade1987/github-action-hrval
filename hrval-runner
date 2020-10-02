@@ -39,9 +39,9 @@ function build {
 
 function changed_yamls {
   git diff \
+    --no-index \
     --diff-filter AM \
     --name-only \
-    --no-index \
     "$TMP_DIR/$INPUT_BASE_REF" "$TMP_DIR/$INPUT_HEAD_REF" \
   | grep -E '\.(yaml|yml)$'
 }
