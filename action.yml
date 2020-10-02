@@ -1,0 +1,27 @@
+name: hrval
+description: Run hrval on files that have changed between kustomize built head and base
+inputs:
+  base_ref:
+    description: Ref for PR base
+    required: true
+    default: ${{ github.base_ref }}
+  head_ref:
+    description: Ref for PR head
+    required: true
+    default: ${{ github.head_ref }}
+  helm_version:
+    description: Version of Helm to validate against
+    default: v3
+  ignore_values:
+    description: When set to true HelmRelease values will be ignored
+    default: false
+  kubernetes_version:
+    description: Version of Kubernetes to validate against
+    default: "1.17.0"
+  pr_num:
+    description: PR number / ID
+    required: true
+    default: ${{ github.event.number }}
+runs:
+  using: docker
+  image: Dockerfile
