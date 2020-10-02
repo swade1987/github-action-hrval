@@ -72,7 +72,7 @@ function main {
       if [[ $returned -ne 0 ]]; then
         exit_code=$returned
       fi
-      output+="$hrval_output\n\n"
+      output+=$(sed -E "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" <<< "${hrval_output}%0A%0A")
     fi
   done
   set -e
