@@ -67,7 +67,7 @@ function main {
   set +e
   for yaml in $(changed_yamls); do
     if [[ $(is_helm_release "$yaml") == "true" ]]; then
-      /usr/local/bin/hrval.sh "$yaml" "$INPUT_IGNORE_VALUES" "$INPUT_KUBE_VER" "$INPUT_HELM_VER"
+      /usr/local/bin/hrval.sh "$yaml" "$INPUT_IGNORE_VALUES" "$INPUT_KUBERNETES_VERSION" "$INPUT_HELM_VERSION"
       files_tested=$(( files_tested+1 ))
     fi
   done
