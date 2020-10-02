@@ -72,7 +72,7 @@ function main {
       if [[ $returned -ne 0 ]]; then
         exit_code=$returned
       fi
-      echo "$hrval_output"
+      printf "%s\n\n" "$hrval_output"
     fi
   done
   set -e
