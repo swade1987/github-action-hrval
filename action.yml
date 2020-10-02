@@ -22,13 +22,6 @@ inputs:
     description: PR number / ID
     required: true
     default: ${{ github.event.number }}
-  token:
-    description: Token for GitHub authentication
-    required: true
-    default: ${{ github.token }}
-outputs:
-  output:
-    description: Output from hrval for changed files
 runs:
   using: docker
   image: Dockerfile
