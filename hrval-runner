@@ -58,7 +58,7 @@ function is_helm_release {
 }
 
 function main {
-  local exit_code hrval_output output returned
+  local exit_code escaped_output formatted_output hrval_output output returned
   exit_code=0
 
   build "$INPUT_HEAD_REF"
@@ -77,7 +77,10 @@ function main {
   done
   set -e
 
-  echo "::set-output name=output::$output"
+  formatted_output=$(printf "\`\`\`\n%s\n\`\`\`\n" "$output")
+  escaped_output=${formatted_output//$'\n'/'%0A'}
+  echo "::set-output name=output::$escaped_output"
+  printf "\n\nOutput: %s\n" "$escaped_output"
   exit $exit_code
 }
 
