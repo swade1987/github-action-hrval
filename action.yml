@@ -9,6 +9,15 @@ inputs:
     description: Ref for PR head
     required: true
     default: ${{ github.head_ref }}
+  helmVersion:
+    description: Version of Helm to validate against
+    default: v3
+  ignoreValues:
+    description: When set to true HelmRelease values will be ignored
+    default: false
+  kubernetesVersion:
+    description: Version of Kubernetes to validate against
+    default: "1.17.0"
   pr_num:
     description: PR number / ID
     required: true
