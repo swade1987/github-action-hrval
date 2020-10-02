@@ -27,8 +27,8 @@ inputs:
     required: true
     default: ${{ github.token }}
 outputs:
-  num_files_tested:
-    description: The number of HelmRelease files tested
+  output:
+    description: Output from hrval for changed files
 runs:
   using: docker
   image: Dockerfile

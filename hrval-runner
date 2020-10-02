@@ -58,8 +58,8 @@ function is_helm_release {
 }
 
 function main {
-  local files_tested
-  files_tested=0
+  local exit_code hrval_output output returned
+  exit_code=0
 
   build "$INPUT_HEAD_REF"
   build "$INPUT_BASE_REF"
@@ -67,13 +67,18 @@ function main {
   set +e
   for yaml in $(changed_yamls); do
     if [[ $(is_helm_release "$yaml") == "true" ]]; then
-      /usr/local/bin/hrval.sh "$yaml" "$INPUT_IGNORE_VALUES" "$INPUT_KUBERNETES_VERSION" "$INPUT_HELM_VERSION"
-      files_tested=$(( files_tested+1 ))
+      hrval_output=$(/usr/local/bin/hrval.sh "$yaml" "$INPUT_IGNORE_VALUES" "$INPUT_KUBERNETES_VERSION" "$INPUT_HELM_VERSION")
+      returned=$?
+      if [[ $returned -ne 0 ]]; then
+        exit_code=$returned
+      fi
+      output+="$hrval_output\n\n"
     fi
   done
   set -e
 
-  echo "::set-output name=num_files_tested::${files_tested}"
+  echo "::set-output name=output::$output"
+  exit $exit_code
 }
 
 main
