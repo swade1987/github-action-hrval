@@ -73,7 +73,7 @@ function main {
   done
   set -e
 
-  echo "::set-output name=numFilesTested::${files_tested}"
+  echo "::set-output name=num_files_tested::${files_tested}"
 }
 
 main

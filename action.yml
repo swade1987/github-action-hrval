@@ -9,13 +9,13 @@ inputs:
     description: Ref for PR head
     required: true
     default: ${{ github.head_ref }}
-  helmVersion:
+  helm_version:
     description: Version of Helm to validate against
     default: v3
-  ignoreValues:
+  ignore_values:
     description: When set to true HelmRelease values will be ignored
     default: false
-  kubernetesVersion:
+  kubernetes_version:
     description: Version of Kubernetes to validate against
     default: "1.17.0"
   pr_num:
@@ -27,7 +27,7 @@ inputs:
     required: true
     default: ${{ github.token }}
 outputs:
-  numFilesTested:
+  num_files_tested:
     description: The number of HelmRelease files tested
 runs:
   using: docker
