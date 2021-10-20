@@ -1,4 +1,4 @@
-FROM ksoc-private/docker-kubernetes-toolkit:1.17.2
+FROM ksoc-private/docker-kubernetes-toolkit:1.21.3
 
 COPY hrval-runner /
 
