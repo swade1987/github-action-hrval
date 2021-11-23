@@ -49,7 +49,7 @@ function changed_yamls {
 function is_helm_release {
   local kind yaml
   yaml=$1
-  kind=$(yq r "$yaml" kind)
+  kind=$(yq e '.kind' "$yaml")
   if [[ $kind == "HelmRelease" ]]; then
       echo true
   else
