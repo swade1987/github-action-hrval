@@ -16,7 +16,7 @@ function patched_kustomization {
   kustomize create
   kustomize edit add resource "$env_path"
   if [ -s "$flux_patch" ]; then
-    kustomize edit add patch "$flux_patch"
+    kustomize edit add patch --path "$flux_patch"
   fi
 }
 
