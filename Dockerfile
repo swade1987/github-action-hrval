@@ -1,4 +1,4 @@
-FROM us.gcr.io/ksoc-public/kubernetes-toolkit:1.21.3
+FROM us.gcr.io/ksoc-public/kubernetes-toolkit:1.24.9
 
 COPY hrval-runner /
 
