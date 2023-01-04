@@ -23,6 +23,9 @@ function patched_kustomization {
 
 function build {
   local ref="$1"
+
+  git config --global --add safe.directory /github/workspace
+
   printf "\n\nChecking out ref: %s\n" "$ref"
   git checkout "$ref" --quiet
   for env_path in $(get_targets); do
