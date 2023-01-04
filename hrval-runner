@@ -70,7 +70,7 @@ function main {
   set +e
   for yaml in $(changed_yamls); do
     if [[ $(is_helm_release "$yaml") == "true" ]]; then
-      hrval_output=$(/usr/local/bin/hrval.sh "$yaml" "$INPUT_IGNORE_VALUES" "$INPUT_KUBERNETES_VERSION" "$INPUT_HELM_VERSION")
+      hrval_output=$(/usr/local/bin/hrval.sh "$yaml" "$INPUT_IGNORE_VALUES" "$INPUT_HELM_VERSION")
       returned=$?
       if [[ $returned -ne 0 ]]; then
         exit_code=$returned
